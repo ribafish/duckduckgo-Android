@@ -1,5 +1,7 @@
 plugins {
     id("de.fayard.refreshVersions") version "0.60.5"
+    id 'com.gradle.develocity' version '4.1'
+    id 'com.gradle.common-custom-user-data-gradle-plugin' version '2.3'
 }
 
 rootDir.eachFile(groovy.io.FileType.DIRECTORIES) { File parent ->
@@ -39,6 +41,16 @@ rootProject.children.each { subproject ->
     }
 }
 
+def isCI = System.getenv('CI') != null
+
+develocity {
+    server = 'https://ge.solutions-team.gradle.com/'
+    allowUntrustedServer = false
+
+    buildScan {
+        uploadInBackground = !isCI
+    }
+}
 
 buildCache {
 
@@ -68,5 +80,10 @@ buildCache {
         // configure local build cache directory so that it is local to the project dir
         directory = new File(rootDir, 'build-cache')
         removeUnusedEntriesAfterDays = 7
+    }
+
+    remote(develocity.buildCache) {
+        enabled = true
+        push = isCI
     }
 }
