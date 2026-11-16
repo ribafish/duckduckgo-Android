@@ -16,7 +16,7 @@ rootProject.name = "androidRoot"
 def isCI = System.getenv('CI') != null
 
 develocity {
-    server = 'https://duckduckgo.develocity.cloud/'
+    server = 'https://solutions.develocity.cloud'
     allowUntrustedServer = false
 
     buildScan {
