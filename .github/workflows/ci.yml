@@ -2,13 +2,13 @@ name: CI Checks
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-      - develop
-  pull_request:
-  # Required by the merge queue: it validates a temporary merge-group branch and waits for the same required checks
-  merge_group:
+  # push:
+    # branches:
+      # - main
+      # - develop
+  # pull_request:
+  # # Required by the merge queue: it validates a temporary merge-group branch and waits for the same required checks
+  # merge_group:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

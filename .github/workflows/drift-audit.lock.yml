@@ -28,8 +28,8 @@
 
 name: "AI-docs Semantic Drift Audit"
 "on":
-  schedule:
-  - cron: "0 5 */3 * *"
+  # schedule:
+  # - cron: "0 5 */3 * *"
   workflow_dispatch:
     inputs:
       aw_context:

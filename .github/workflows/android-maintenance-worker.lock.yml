@@ -28,8 +28,8 @@
 
 name: "Android Maintenance Worker"
 "on":
-  schedule:
-  - cron: "0 5 * * *"
+  # schedule:
+  # - cron: "0 5 * * *"
   workflow_dispatch:
     inputs:
       aw_context:

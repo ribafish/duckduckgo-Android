@@ -13,8 +13,8 @@ on:
     paths-ignore:
       - "**/res/values*/**"
       - "**/*.md"
-  schedule:
-    - cron: "17 6 * * *"
+  # schedule:
+    # - cron: "17 6 * * *"
   workflow_dispatch:
     inputs:
       mode:

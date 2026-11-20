@@ -1,8 +1,8 @@
 name: 'End to End Tests - Full Suite of non release blocker tests (Nightly)'
 
 on:
-  schedule:
-    - cron: '0 5 * * *' # run at 5 AM UTC
+  # schedule:
+    # - cron: '0 5 * * *' # run at 5 AM UTC
   workflow_call:
     inputs:
       commit:

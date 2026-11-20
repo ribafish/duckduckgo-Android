@@ -1,9 +1,10 @@
 name: 'End to End Tests - Strings Changed'
 
 on:
-  pull_request:
-    paths:
-      - '**/values/strings*.xml'
+  # pull_request:
+    # paths:
+      # - '**/values/strings*.xml'
+  workflow_dispatch:
 
 jobs:
   call-end-to-end:

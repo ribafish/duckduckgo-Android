@@ -1,8 +1,8 @@
 name: Release to Internal and Firebase
 
 on:
-  schedule:
-    - cron: '15 2 * * *' # run at 2:15 AM UTC
+  # schedule:
+    # - cron: '15 2 * * *' # run at 2:15 AM UTC
   workflow_call:
     inputs:
       ref:

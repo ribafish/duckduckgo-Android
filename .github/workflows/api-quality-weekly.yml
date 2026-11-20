@@ -1,9 +1,9 @@
 name: API quality weekly report
 
 on:
-  schedule:
-    # Mondays 06:00 UTC, so the report is ready for the week's first triage.
-    - cron: '0 6 * * 1'
+  # schedule:
+    # # Mondays 06:00 UTC, so the report is ready for the week's first triage.
+    # - cron: '0 6 * * 1'
   workflow_dispatch:
     inputs:
       post_to_asana:
