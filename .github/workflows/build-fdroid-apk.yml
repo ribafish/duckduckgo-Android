@@ -39,6 +39,18 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          # The Develocity Artifact Cache below caches the Gradle User Home instead
+          cache-disabled: true
+
+      - name: Set up Develocity Artifact Cache
+        uses: gradle/develocity-artifact-cache-github-action@v1
+        with:
+          develocity-edge-url: https://usw2-edge.solutions-team.gradle.com
+          develocity-access-key: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+          # Artifact Cache CLI before 1.11.0 leaves the repository out of generated image names; remove image-names once it is 1.11.0 or later
+          image-names: |
+            ${{ github.repository_id }}~${{ github.workflow }}~${{ github.job }}~${{ github.ref }}~${{ runner.os }}~${{ runner.arch }}
+            ${{ github.repository_id }}~${{ github.workflow }}~${{ github.job }}~refs/heads/${{ github.base_ref || github.event.repository.default_branch }}~${{ runner.os }}~${{ runner.arch }}
 
       - name: Assemble F-Droid release apk
         env:
