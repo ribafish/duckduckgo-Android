@@ -61,6 +61,9 @@ jobs:
   build:
     if: ${{ inputs.internal_binary_id == '' || inputs.release_binary_id == '' }}
     uses: ./.github/workflows/e2e-build-and-upload.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       commit: ${{ inputs.commit }}
       create_asana_tasks: ${{ inputs.create_asana_tasks }}

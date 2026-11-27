@@ -50,12 +50,18 @@ concurrency:
 jobs:
   nightly:
     uses: ./.github/workflows/nightly.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       commit: ${{ inputs.commit }}
     secrets: inherit
 
   end-to-end-build:
     uses: ./.github/workflows/e2e-build-and-upload.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       commit: ${{ inputs.commit }}
       create_asana_tasks: ${{ inputs.create_asana_tasks }}
@@ -65,6 +71,9 @@ jobs:
   end-to-end:
     needs: [nightly, end-to-end-build]
     uses: ./.github/workflows/e2e-nightly-full-suite.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       commit: ${{ inputs.commit }}
       create_asana_tasks: ${{ inputs.create_asana_tasks }}
@@ -77,6 +86,9 @@ jobs:
   privacy:
     needs: nightly
     uses: ./.github/workflows/privacy.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       commit: ${{ inputs.commit }}
     secrets: inherit

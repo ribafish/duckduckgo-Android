@@ -25,6 +25,9 @@ jobs:
   upload-play-store:
     needs: create-asana-release-task
     uses: ./.github/workflows/release_upload_play_store.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       ref: ${{ inputs.app-version }}
     secrets: inherit
@@ -32,6 +35,9 @@ jobs:
   upload-internal:
     needs: upload-play-store
     uses: ./.github/workflows/release_upload_internal.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       ref: 'develop'
     secrets: inherit
