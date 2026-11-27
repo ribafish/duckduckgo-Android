@@ -28,6 +28,9 @@ on:
 jobs:
   build_and_upload:
     runs-on: android-large-runner
+    permissions:
+      contents: read
+      id-token: write
     name: Build and upload binaries
     outputs:
       internal_binary_id: ${{ steps.maestro-upload-internal-binary.outputs.maestro_app_binary_id }}
@@ -48,7 +51,6 @@ jobs:
           release_key: ${{ secrets.FAKE_RELEASE_KEY }}
           gradle_encryption_key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           gradle_flags: '-Pautofill-disable-auth-requirement'
-          develocity_access_key: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
           ducksans_package_auth_user: ${{ secrets.DAXMOBILE_GITHUB_PACKAGES_AUTOMATION_USER }}
           ducksans_package_auth_token: ${{ secrets.DAXMOBILE_GITHUB_PACKAGES_AUTOMATION }}
 

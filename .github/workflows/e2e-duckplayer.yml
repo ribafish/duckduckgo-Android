@@ -20,6 +20,9 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' }}
     name: Duck Player Tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -35,7 +38,6 @@ jobs:
           release_properties: ${{ secrets.FAKE_RELEASE_PROPERTIES }}
           release_key: ${{ secrets.FAKE_RELEASE_KEY }}
           gradle_encryption_key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
-          develocity_access_key: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
           ducksans_package_auth_user: ${{ secrets.DAXMOBILE_GITHUB_PACKAGES_AUTOMATION_USER }}
           ducksans_package_auth_token: ${{ secrets.DAXMOBILE_GITHUB_PACKAGES_AUTOMATION }}
           gradle_flags: '-Pconfig_patches=".maestro/duckplayer/patches/ad_blocking_enabled_patch.json,.maestro/duckplayer/patches/duck_player_standalone_settings_patch.json"'

@@ -55,8 +55,9 @@ jobs:
     needs: [check_changes]
     if: needs.check_changes.outputs.should_run == 'true'
     runs-on: ubuntu-24.04
-    env:
-      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -71,9 +72,20 @@ jobs:
           java-version-file: .github/.java-version
           distribution: 'temurin'
 
+      - name: Mint Develocity credential
+        id: develocity-credential
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const token = await core.getIDToken('https://duckduckgo.develocity.cloud')
+            core.setSecret(token)
+            core.setOutput('access-key', `duckduckgo.develocity.cloud=${token}`)
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
         with:
+          develocity-access-key: ${{ steps.develocity-credential.outputs.access-key }}
+          develocity-token-expiry: 6
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Run Code Formatting Checks
@@ -117,8 +129,9 @@ jobs:
     needs: [check_changes]
     if: needs.check_changes.outputs.should_run == 'true'
     runs-on: android-large-runner
-    env:
-      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -132,9 +145,20 @@ jobs:
           java-version-file: .github/.java-version
           distribution: 'temurin'
 
+      - name: Mint Develocity credential
+        id: develocity-credential
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const token = await core.getIDToken('https://duckduckgo.develocity.cloud')
+            core.setSecret(token)
+            core.setOutput('access-key', `duckduckgo.develocity.cloud=${token}`)
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
         with:
+          develocity-access-key: ${{ steps.develocity-credential.outputs.access-key }}
+          develocity-token-expiry: 6
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: JVM tests
@@ -158,8 +182,9 @@ jobs:
     needs: [check_changes]
     if: needs.check_changes.outputs.should_run == 'true'
     runs-on: android-large-runner
-    env:
-      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -178,9 +203,20 @@ jobs:
         with:
           go-version: '1.18.3'
 
+      - name: Mint Develocity credential
+        id: develocity-credential
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const token = await core.getIDToken('https://duckduckgo.develocity.cloud')
+            core.setSecret(token)
+            core.setOutput('access-key', `duckduckgo.develocity.cloud=${token}`)
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
         with:
+          develocity-access-key: ${{ steps.develocity-credential.outputs.access-key }}
+          develocity-token-expiry: 6
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Lint
@@ -202,8 +238,9 @@ jobs:
     if: needs.check_changes.outputs.should_run == 'true'
     runs-on: android-large-runner
     name: Android CI tests
-    env:
-      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -232,9 +269,20 @@ jobs:
           FLANK: ${{ secrets.FLANK }}
         run: echo "$FLANK" > flank.json
 
+      - name: Mint Develocity credential
+        id: develocity-credential
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const token = await core.getIDToken('https://duckduckgo.develocity.cloud')
+            core.setSecret(token)
+            core.setOutput('access-key', `duckduckgo.develocity.cloud=${token}`)
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
         with:
+          develocity-access-key: ${{ steps.develocity-credential.outputs.access-key }}
+          develocity-token-expiry: 6
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Build

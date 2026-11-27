@@ -17,8 +17,9 @@ jobs:
   unit_tests:
     name: External content scope script tests
     runs-on: ubuntu-latest
-    env:
-      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -53,9 +54,20 @@ jobs:
           FLANK: ${{ secrets.FLANK }}
         run: echo "$FLANK" > flank.json
 
+      - name: Mint Develocity credential
+        id: develocity-credential
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const token = await core.getIDToken('https://duckduckgo.develocity.cloud')
+            core.setSecret(token)
+            core.setOutput('access-key', `duckduckgo.develocity.cloud=${token}`)
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
         with:
+          develocity-access-key: ${{ steps.develocity-credential.outputs.access-key }}
+          develocity-token-expiry: 6
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Build

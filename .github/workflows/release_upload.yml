@@ -18,6 +18,9 @@ jobs:
   release-play-store:
     name: Publish Release to Play Store
     uses: ./.github/workflows/release_upload_play_store.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       ref: ${{ github.event.inputs.ref }}
 
@@ -26,3 +29,6 @@ jobs:
     needs: release-play-store
     if: needs.release-play-store.result == 'success'
     uses: ./.github/workflows/release_upload_internal.yml
+    permissions:
+      contents: read
+      id-token: write

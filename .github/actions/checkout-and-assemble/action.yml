@@ -30,10 +30,6 @@ inputs:
       combine with -PuseUploadSigning in gradle_flags — enforced below.
     required: false
     default: ''
-  develocity_access_key:
-    description: 'Develocity access key for Gradle remote caching'
-    required: false
-    default: ''
   ducksans_package_auth_user:
     description: 'GitHub username for DuckSans font package authentication'
     required: false
@@ -118,9 +114,21 @@ runs:
         fileName: android
         destination-path: $HOME/jenkins_static/com.duckduckgo.mobile.android/
 
+    # The calling job must grant id-token: write.
+    - name: Mint Develocity credential
+      id: develocity-credential
+      uses: actions/github-script@v8
+      with:
+        script: |
+          const token = await core.getIDToken('https://duckduckgo.develocity.cloud')
+          core.setSecret(token)
+          core.setOutput('access-key', `duckduckgo.develocity.cloud=${token}`)
+
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v5
       with:
+        develocity-access-key: ${{ steps.develocity-credential.outputs.access-key }}
+        develocity-token-expiry: 6
         cache-encryption-key: ${{ inputs.gradle_encryption_key }}
         # Cleanup prunes dependencies a job did not use before saving the cache, which can drop the
         # internal-only artifacts while the saved configuration cache still points at them. The
@@ -131,7 +139,6 @@ runs:
       if: ${{ inputs.flavours == 'all' || inputs.flavours == 'play' }}
       shell: bash
       env:
-        DEVELOCITY_ACCESS_KEY: ${{ inputs.develocity_access_key }}
         DUCKSANS_PACKAGE_AUTH_USER: ${{ inputs.ducksans_package_auth_user }}
         DUCKSANS_PACKAGE_AUTH_TOKEN: ${{ inputs.ducksans_package_auth_token }}
       run: ./gradlew assemblePlayRelease -Pforce-default-variant -Pskip-onboarding -x lint ${{ inputs.gradle_flags }}
@@ -145,7 +152,6 @@ runs:
       if: ${{ inputs.flavours == 'all' || inputs.flavours == 'internal' }}
       shell: bash
       env:
-        DEVELOCITY_ACCESS_KEY: ${{ inputs.develocity_access_key }}
         DUCKSANS_PACKAGE_AUTH_USER: ${{ inputs.ducksans_package_auth_user }}
         DUCKSANS_PACKAGE_AUTH_TOKEN: ${{ inputs.ducksans_package_auth_token }}
       run: ./gradlew assembleInternalRelease -Pforce-default-variant -Pskip-onboarding -x lint ${{ inputs.gradle_flags }}

@@ -8,6 +8,9 @@ on:
 jobs:
   call-end-to-end:
     uses: ./.github/workflows/e2e-nightly-full-suite.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       commit: ${{ github.event.pull_request.head.sha }}
       create_asana_tasks: false

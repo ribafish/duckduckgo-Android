@@ -35,6 +35,9 @@ jobs:
   call-release-blocking-checks:
     needs: resolve-commit
     uses: ./.github/workflows/release_blocking_checks.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       commit: ${{ needs.resolve-commit.outputs.commit_sha }}
       maestro_priority: high
@@ -44,8 +47,9 @@ jobs:
     name: Assemble fdroidRelease
     needs: resolve-commit
     runs-on: android-large-runner
-    env:
-      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -74,9 +78,20 @@ jobs:
           java-version-file: .github/.java-version
           distribution: 'temurin'
 
+      - name: Mint Develocity credential
+        id: develocity-credential
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const token = await core.getIDToken('https://duckduckgo.develocity.cloud')
+            core.setSecret(token)
+            core.setOutput('access-key', `duckduckgo.develocity.cloud=${token}`)
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
         with:
+          develocity-access-key: ${{ steps.develocity-credential.outputs.access-key }}
+          develocity-token-expiry: 6
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Assemble fdroidRelease

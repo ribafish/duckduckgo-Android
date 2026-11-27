@@ -60,6 +60,9 @@ jobs:
   release-blocking-checks:
     needs: resolve-hotfix-sha
     uses: ./.github/workflows/release_blocking_checks.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       commit: ${{ needs.resolve-hotfix-sha.outputs.commit_sha }}
       create_asana_tasks: false
